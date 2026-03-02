@@ -1,0 +1,5 @@
+com/crosve/keycloak/MyUserProvider.class
+com/crosve/keycloak/model/MyUser.class
+com/crosve/keycloak/MyUserAdapter.class
+com/crosve/keycloak/MyUserProviderFactory.class
+com/crosve/keycloak/MyApiClient.class
