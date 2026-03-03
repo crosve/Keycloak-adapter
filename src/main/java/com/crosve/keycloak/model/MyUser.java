@@ -1,5 +1,4 @@
 package com.crosve.keycloak.model;
-import lombok.Data;
 
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
