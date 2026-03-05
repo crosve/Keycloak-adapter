@@ -2,6 +2,7 @@
 
 package com.crosve.keycloak;
 
+
 import org.keycloak.component.ComponentModel;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.storage.UserStorageProviderFactory;
@@ -31,8 +32,13 @@ public class MyUserProviderFactory implements UserStorageProviderFactory<MyUserP
     @Override
     public List<ProviderConfigProperty> getConfigProperties() {
         return ProviderConfigurationBuilder.create()
-        .property("userApiBaseUrl", "API Base URL", "The URL of your external user REST API", 
-                ProviderConfigProperty.STRING_TYPE, "http://my-api:3000", null)
-        .build();
+                .property()
+                .name("userApiBaseUrl")
+                .label("API Base URL")
+                .helpText("The full URL of your Flask API (e.g., https://api.myserver.com/api)")
+                .type(ProviderConfigProperty.STRING_TYPE)
+                .defaultValue("https://keycloakapi.feeltiptop.com/api")
+                .add()
+                .build();
     }
 }
