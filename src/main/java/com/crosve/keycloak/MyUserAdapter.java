@@ -17,14 +17,45 @@ public class MyUserAdapter extends AbstractUserAdapterFederatedStorage {
         this.storageId = new StorageId(storageProviderModel.getId(), String.valueOf(user.getUserID()));
     }
 
+    // ======================
+    // GETTERS
+    // ======================
     @Override
-    public String getUsername() { return user.getUsername(); }
-
-    @Override
-    public void setUsername(String username) {
-        // read-only or implement if you support updates
+    public String getUsername() {
+        return user.getUsername();
     }
 
     @Override
-    public String getEmail() { return user.getEmail(); }
+    public String getEmail() {
+        return user.getEmail();
+    }
+
+    // ======================
+    // SETTERS
+    // ======================
+    @Override
+    public void setUsername(String username) {
+        user.setUsername(username);
+    }
+
+    @Override
+    public void setEmail(String email) {
+        user.setEmail(email);
+    }
+
+    @Override
+    public void setFirstName(String firstName) {
+        user.setFirstName(firstName);
+    }
+
+    @Override
+    public void setLastName(String lastName) {
+        user.setLastName(lastName);
+    }
+
+    // Getter for MyUser object (for MyUserProvider to call updateUser)
+    public MyUser getUser() {
+        return user;
+    }
+
 }

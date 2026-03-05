@@ -6,6 +6,7 @@ import org.keycloak.component.ComponentModel;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
 import org.keycloak.models.UserModel;
+import org.keycloak.storage.StorageId;
 import org.keycloak.storage.UserStorageProvider;
 import org.keycloak.storage.user.UserLookupProvider;
 import java.util.HashMap;
@@ -43,8 +44,13 @@ public class MyUserProvider implements UserStorageProvider, UserLookupProvider, 
     }
 
     @Override
-    public UserModel getUserById(RealmModel realm, String id) { 
-        return null;
+    public UserModel getUserById(RealmModel realm, String id) {
+        StorageId storageId = new StorageId(id);
+        String externalId = storageId.getExternalId(); // your userID as string
+
+        return client.fetchUserById(externalId)
+                .map(u -> new MyUserAdapter(session, realm, model, u))
+                .orElse(null);
     }
 
     @Override
@@ -65,11 +71,13 @@ public class MyUserProvider implements UserStorageProvider, UserLookupProvider, 
         // CHANGE THIS: Use setUserID, not setId
         newUser.setUserID((int)(Math.random() * 10000)); 
 
-        // This will still error UNTIL you do step 2 below
-        com.crosve.keycloak.model.MyUser savedUser = client.createUser(newUser);
+        // createUser returns Optional<MyUser> -> unwrap it
+        com.crosve.keycloak.model.MyUser savedUser = client.createUser(newUser).orElse(null);
+        if (savedUser == null)
+            return null;
+
         return new MyUserAdapter(session, realm, model, savedUser);
     }
-
 
     @Override
     public boolean removeUser(RealmModel realm, UserModel user) {
