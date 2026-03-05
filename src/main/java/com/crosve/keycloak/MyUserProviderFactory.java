@@ -20,6 +20,7 @@ public class MyUserProviderFactory implements UserStorageProviderFactory<MyUserP
     @Override
     public MyUserProvider create(KeycloakSession session, ComponentModel model) {
         // Here is where you initialize your API client and pass it to the provider
+        System.out.print("Starting up the user provider");
         MyApiClient client = new MyApiClient(session, model);
         return new MyUserProvider(session, model, client);
     }
@@ -31,6 +32,7 @@ public class MyUserProviderFactory implements UserStorageProviderFactory<MyUserP
 
     @Override
     public List<ProviderConfigProperty> getConfigProperties() {
+        System.out.print("Starting up the Keycloak factory");
         return ProviderConfigurationBuilder.create()
                 .property()
                 .name("userApiBaseUrl")

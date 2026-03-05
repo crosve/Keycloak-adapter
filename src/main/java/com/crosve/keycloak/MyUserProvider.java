@@ -31,7 +31,12 @@ public class MyUserProvider implements UserStorageProvider, UserLookupProvider, 
 
     @Override
     public UserModel getUserByUsername(RealmModel realm, String username) {
+        System.out.println("DEBUG: Keycloak is searching for: " + username);
         if (loadedUsers.containsKey(username)) return loadedUsers.get(username);
+
+        System.out.print("User was not found in the loaded Users ");
+
+
 
         // Fetch from API and wrap in our Adapter
         return client.fetchUserByUsername(username)
