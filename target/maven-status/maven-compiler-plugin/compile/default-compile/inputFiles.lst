@@ -1,5 +1,5 @@
-/app/src/main/java/com/crosve/keycloak/MyUserAdapter.java
-/app/src/main/java/com/crosve/keycloak/MyUserProvider.java
-/app/src/main/java/com/crosve/keycloak/MyApiClient.java
-/app/src/main/java/com/crosve/keycloak/MyUserProviderFactory.java
-/app/src/main/java/com/crosve/keycloak/model/MyUser.java
+/Users/apekshagaonkar/Keycloak-adapter/src/main/java/com/crosve/keycloak/MyUserAdapter.java
+/Users/apekshagaonkar/Keycloak-adapter/src/main/java/com/crosve/keycloak/model/MyUser.java
+/Users/apekshagaonkar/Keycloak-adapter/src/main/java/com/crosve/keycloak/MyApiClient.java
+/Users/apekshagaonkar/Keycloak-adapter/src/main/java/com/crosve/keycloak/MyUserProviderFactory.java
+/Users/apekshagaonkar/Keycloak-adapter/src/main/java/com/crosve/keycloak/MyUserProvider.java

@@ -15,7 +15,9 @@ import java.util.Map;
 import java.util.UUID;
 import org.keycloak.storage.user.UserRegistrationProvider;
 import com.crosve.keycloak.model.MyUser;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class MyUserProvider implements UserStorageProvider, UserLookupProvider, UserRegistrationProvider {
 
     private final KeycloakSession session;
@@ -31,6 +33,7 @@ public class MyUserProvider implements UserStorageProvider, UserLookupProvider, 
 
     @Override
     public UserModel getUserByUsername(RealmModel realm, String username) {
+        log.info("getUserByUsername called with username: {}", username);
         if (loadedUsers.containsKey(username)) return loadedUsers.get(username);
 
         // Fetch from API and wrap in our Adapter
@@ -39,23 +42,36 @@ public class MyUserProvider implements UserStorageProvider, UserLookupProvider, 
                     //Wraps around MyUserAdapter in order for keycloak to understand the data 
                     UserModel adapter = new MyUserAdapter(session, realm, model, user);
                     loadedUsers.put(username, adapter);
+                    log.info("Successfully loaded user from API: {}", username);
                     return adapter;
                 }).orElse(null);
     }
 
     @Override
     public UserModel getUserById(RealmModel realm, String id) {
+        log.info("getUserById called with id: {}", id);
         StorageId storageId = new StorageId(id);
         String externalId = storageId.getExternalId(); // your userID as string
 
         return client.fetchUserById(externalId)
-                .map(u -> new MyUserAdapter(session, realm, model, u))
+                .map(u -> {
+                    UserModel adapter = new MyUserAdapter(session, realm, model, u);
+                    log.info("Successfully loaded user by id from API: {}", externalId);
+                    return adapter;
+                })
                 .orElse(null);
     }
 
     @Override
     public UserModel getUserByEmail(RealmModel realm, String email) {
-        return null; 
+        log.info("getUserByEmail called with email: {}", email);
+        return client.fetchUserByEmail(email)
+                .map(u -> {
+                    UserModel adapter = new MyUserAdapter(session, realm, model, u);
+                    log.info("Successfully loaded user by email from API: {}", email);
+                    return adapter;
+                })
+                .orElse(null);
     }
 
     @Override
@@ -65,6 +81,7 @@ public class MyUserProvider implements UserStorageProvider, UserLookupProvider, 
 
     @Override
     public UserModel addUser(RealmModel realm, String username) {
+        log.info("addUser called with username: {}", username);
         com.crosve.keycloak.model.MyUser newUser = new com.crosve.keycloak.model.MyUser();
         newUser.setUsername(username);
         
@@ -73,9 +90,12 @@ public class MyUserProvider implements UserStorageProvider, UserLookupProvider, 
 
         // createUser returns Optional<MyUser> -> unwrap it
         com.crosve.keycloak.model.MyUser savedUser = client.createUser(newUser).orElse(null);
-        if (savedUser == null)
+        if (savedUser == null) {
+            log.error("Failed to create user in API: {}", username);
             return null;
+        }
 
+        log.info("Successfully created user in API: {}", username);
         return new MyUserAdapter(session, realm, model, savedUser);
     }
 

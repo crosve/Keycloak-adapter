@@ -48,6 +48,18 @@ public class MyApiClient {
         }
     }
 
+    public Optional<MyUser> fetchUserByEmail(String email) {
+        try {
+            // Fetch user by email from the API
+            return Optional.ofNullable(SimpleHttp.doGet(String.format("%s/users/email/%s", baseUrl, email), session)
+                    .acceptJson()
+                    .asJson(MyUser.class));
+        } catch (IOException e) {
+            log.error("Failed to fetch user by email {} from API: {}", email, e.getMessage());
+            return Optional.empty();
+        }
+    }
+
     // CREATE
     public Optional<MyUser> createUser(MyUser user) {
         try {
